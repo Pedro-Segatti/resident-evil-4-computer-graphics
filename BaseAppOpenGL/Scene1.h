@@ -4,7 +4,8 @@
 #include "CTimer.h"
 #include "CTexto.h"
 #include "CCamera.h"
-
+#include <glm/glm.hpp>
+#include "CModel_3DS.h"
 
 
 class CScene1 : public CSceneBaseClass
@@ -19,10 +20,14 @@ public:
 	virtual void KeyDownPressed(WPARAM	wParam);	// Tratamento de teclas pressionadas
 	virtual int DrawGLScene(void);					// Função que desenha a cena
 
+	void CreateSkyBox(float x, float y, float z,
+		float width, float height, float length,
+		CTexture* pTextures);
+
 	void Draw3DSGrid(float width, float length);
 	void DrawAxis();
+	glm::vec3 CalculateTriangleNormalVector(glm::vec3 P1, glm::vec3 P2, glm::vec3 P3);
 
-	
 private:
 
 	bool	keys[256];		// Array usado para rotinas do teclado
@@ -50,6 +55,25 @@ private:
 
 	float fRenderPosY;
 	float fTimerPosY;
+
+
+
+	// Definindo as propriedades da fonte de luz
+	GLfloat LightAmbient[4];
+	GLfloat LightDiffuse[4];
+	GLfloat LightSpecular[4];
+	GLfloat LightPosition[4];
+	float fLightSpeed;
+
+	// Definindo as propriedades do material
+	GLfloat MatAmbient[4];
+	GLfloat MatDiffuse[4];
+	GLfloat MatSpecular[4];
+	GLfloat MatShininess;
+
+
+	CModel_3DS* pCena1;
+	CModel_3DS* pCasa;
 
 };
 

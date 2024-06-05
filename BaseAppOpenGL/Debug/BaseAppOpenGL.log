@@ -1,21 +1,2 @@
-﻿  CCamera.cpp
-C:\Users\Pedro\Documents\GitHub\resident_evil_4_computer_graphics\BaseAppOpenGL\CCamera.cpp(237,12): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-  CMaterial.cpp
-  CModel_3DS.cpp
-  CShaderManager.cpp
-  CTerreno.cpp
-  CTexto.cpp
-  CTexture.cpp
-  CTimer.cpp
-  GLTexture.cpp
-  Helpers.cpp
-C:\Users\Pedro\Documents\GitHub\resident_evil_4_computer_graphics\BaseAppOpenGL\Helpers.h(1,13): warning C4081: esperado 'newline'; encontrado ';'
-  (compilando o arquivo fonte 'Helpers.cpp')
-  
-  Main.cpp
-C:\Users\Pedro\Documents\GitHub\resident_evil_4_computer_graphics\BaseAppOpenGL\Main.cpp(182,3): warning C4838: a conversão de 'int' em 'BYTE' requer uma conversão de restrição
-  Scene1.cpp
-  SceneBaseClass.cpp
-  SceneManager.cpp
-  Gerando Código...
-  BaseAppOpenGL.vcxproj -> C:\Users\Pedro\Documents\GitHub\resident_evil_4_computer_graphics\Debug\BaseAppOpenGL.exe
+﻿  Scene1.cpp
+  BaseAppOpenGL.vcxproj -> C:\Users\edumo\Documents\GitHub\resident-evil-4-computer-graphics\Debug\BaseAppOpenGL.exe

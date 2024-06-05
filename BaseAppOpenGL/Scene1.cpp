@@ -5,7 +5,7 @@ CScene1::CScene1()
 	pCamera = NULL;
 	pTexto = NULL;
 	pTextures = NULL;
-	
+
 	bIsWireframe = false;
 	bIsCameraFPS = true;
 
@@ -18,7 +18,7 @@ CScene1::CScene1()
 	pTexto = new CTexto();
 
 	// Cria camera
-	pCamera = new CCamera(0.0f, 1.0f, 20.0f);
+	pCamera = new CCamera(0.0f, 1.0f, 20.0f, 1.0f);
 
 	// Cria o Timer
 	pTimer = new CTimer();
@@ -28,7 +28,44 @@ CScene1::CScene1()
 	fRenderPosY = 0.0f;
 
 	// Carrega todas as texturas
-	//pTextures = new CTexture();	
+	pTextures = new CTexture();
+	pTextures->CreateTextureClamp(0, "../Scene1/back.bmp");
+	pTextures->CreateTextureClamp(1, "../Scene1/front.bmp");
+	pTextures->CreateTextureClamp(2, "../Scene1/down.bmp");
+	pTextures->CreateTextureClamp(3, "../Scene1/up.bmp");
+	pTextures->CreateTextureClamp(4, "../Scene1/left.bmp");
+	pTextures->CreateTextureClamp(5, "../Scene1/right.bmp");
+
+
+	LightAmbient[0] = 1.0f;		LightAmbient[1] = 1.0f;		LightAmbient[2] = 1.0f;		LightAmbient[3] = 1.0f;
+	LightDiffuse[0] = 1.0f;		LightDiffuse[1] = 1.0f;		LightDiffuse[2] = 1.0f;		LightDiffuse[3] = 1.0f;
+	LightSpecular[0] = 1.0f;	LightSpecular[1] = 1.0f;	LightSpecular[2] = 1.0f;	LightSpecular[3] = 1.0f;
+	LightPosition[0] = 0.0f;	LightPosition[1] = 20.0f;	LightPosition[2] = 0.0f;	LightPosition[3] = 1.0f;
+
+	MatAmbient[0] = 0.1f;	MatAmbient[1] = 0.1f;	MatAmbient[2] = 0.1f;	MatAmbient[3] = 1.0f;
+	MatDiffuse[0] = 1.0f;	MatDiffuse[1] = 1.0f;	MatDiffuse[2] = 1.0f;	MatDiffuse[3] = 1.0f;
+	MatSpecular[0] = 0.5f;	MatSpecular[1] = 0.5f;	MatSpecular[2] = 0.5f;	MatSpecular[3] = 1.0f;
+	MatShininess = 128.0f;
+
+	// Criando a fonte de luz Point Light
+	glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, LightSpecular);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+
+	// Criando o Material dos objetos
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MatAmbient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MatDiffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, MatSpecular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, MatShininess);
+
+	fLightSpeed = 0.5f;
+
+
+	pCena1 = NULL;
+	pCena1 = new CModel_3DS();
+	pCena1->Load("../Scene1/tubao.3ds");
+
 
 }
 
@@ -57,7 +94,13 @@ CScene1::~CScene1(void)
 	{
 		delete pTimer;
 		pTimer = NULL;
-	}	
+	}
+
+	if (pCena1)
+	{
+		delete pCena1;
+		pCena1 = NULL;
+	}
 }
 
 
@@ -73,7 +116,7 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 		iFrames = 0;							// Reset The FPS Counter
 	}
 	iFrames++;									// FPS counter
-	
+
 	pTimer->Update();							// Atualiza o timer
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Limpa a tela e o Depth Buffer
@@ -84,7 +127,7 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	pCamera->setView();
 
 	// Desenha grid 
-	Draw3DSGrid(20.0f, 20.0f);
+	//Draw3DSGrid(20.0f, 20.0f);
 
 	// Desenha os eixos do sistema cartesiano
 	DrawAxis();
@@ -93,26 +136,47 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	if (bIsWireframe)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//                               DESENHA OS OBJETOS DA CENA (INÍCIO)
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+	// Atualiza a posição da fonte de luz a cada frame
+	glPushMatrix();
+	glTranslatef(LightPosition[0], LightPosition[1], LightPosition[2]);
+	glutSolidSphere(0.5, 10, 10);
+	glPopMatrix();
+
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+
+	glEnable(GL_TEXTURE_2D);
+
+	// Desenha o SkyBox
+	CreateSkyBox(0.0f, 100.0f, 0.0f,
+		1000.0f, 1000.0f, 1000.0f,
+		pTextures);
+
+	glPushMatrix();
+	pCena1->Draw();
+	glPopMatrix();
+
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 
 
 
 
 
 
+	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
 
 
 
-
-
-
-	
 
 
 
@@ -154,7 +218,7 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 
 	//// Imprime o FPS da aplicação e o Timer
 	glRasterPos2f(10.0f, 80.0f);
-	pTexto->glPrint("Frames-per-Second: %d ---- Timer: %.1f segundos", iFPS, (pTimer->GetTime()/1000));
+	pTexto->glPrint("Frames-per-Second: %d ---- Timer: %.1f segundos", iFPS, (pTimer->GetTime() / 1000));
 
 
 	glPopMatrix();
@@ -226,7 +290,31 @@ void CScene1::KeyPressed(void) // Tratamento de teclas pressionadas
 	{
 	}
 
+	if (GetKeyState(VK_UP) & 0x80)
+	{
 
+		LightPosition[2] -= fLightSpeed;
+	}
+	if (GetKeyState(VK_DOWN) & 0x80)
+	{
+		LightPosition[2] += fLightSpeed;
+	}
+	if (GetKeyState(VK_LEFT) & 0x80)
+	{
+		LightPosition[0] -= fLightSpeed;
+	}
+	if (GetKeyState(VK_RIGHT) & 0x80)
+	{
+		LightPosition[0] += fLightSpeed;
+	}
+	if (GetKeyState(VK_PRIOR) & 0x80)
+	{
+		LightPosition[1] += fLightSpeed;
+	}
+	if (GetKeyState(VK_NEXT) & 0x80)
+	{
+		LightPosition[1] -= fLightSpeed;
+	}
 
 }
 
@@ -299,4 +387,130 @@ void CScene1::DrawAxis()
 	glPopMatrix();
 }
 
+glm::vec3 CScene1::CalculateTriangleNormalVector(glm::vec3 P1, glm::vec3 P2, glm::vec3 P3)
+{
+	/*
+			   P3
+			   /\
+			  /  \
+			 /    \
+			/      \
+			+------+
+		   P1      P2
+	*/
 
+	// Calcula V1 e V2
+	glm::vec3 V1, V2;
+	V1.x = P2.x - P1.x;
+	V1.y = P2.y - P1.y;
+	V1.z = P2.z - P1.z;
+
+	V2.x = P3.x - P1.x;
+	V2.y = P3.y - P1.y;
+	V2.z = P3.z - P1.z;
+
+	// Calcula o Cross Produt (vetor perpendicular a V1 e V2)
+	glm::vec3 Normal;
+	Normal.x = V1.y * V2.z - V1.z * V2.y;
+	Normal.y = V1.z * V2.x - V1.x * V2.z;
+	Normal.z = V1.x * V2.y - V1.y * V2.x;
+
+	// Calcula a magnitude do vetor Normal
+	double magnitude = sqrt(Normal.x * Normal.x + Normal.y * Normal.y + Normal.z * Normal.z);
+
+	// Normaliza o vetor Normal (deixa todos os elementos no comprimento 0.0 a 1.0)
+	glm::vec3 NormalizedNormalVector;
+	NormalizedNormalVector.x = (Normal.x / magnitude);
+	NormalizedNormalVector.y = (Normal.y / magnitude);
+	NormalizedNormalVector.z = (Normal.z / magnitude);
+
+	return NormalizedNormalVector;
+}
+
+
+void CScene1::CreateSkyBox(float x, float y, float z,
+	float width, float height, float length,
+	CTexture* pTextures)
+{
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glPushMatrix();
+
+	// Centraliza o Skybox em torno da posição especificada(x, y, z)
+	x = x - width / 2;
+	y = y - height / 2;
+	z = z - length / 2;
+
+
+	// Aplica a textura que representa a parte da frente do skybox (BACK map)
+	pTextures->ApplyTexture(0);
+
+	// Desenha face BACK do cubo do skybox
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y, z);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, z);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, z);
+	glEnd();
+
+
+	// Aplica a textura que representa a parte da frente do skybox (FRONT map)
+	pTextures->ApplyTexture(1);
+
+	// Desenha face FRONT do cubo do skybox
+	glBegin(GL_QUADS);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y, z + length);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, z + length);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y + height, z + length);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y, z + length);
+	glEnd();
+
+
+	// Aplica a textura que representa a parte da frente do skybox (DOWN map)
+	pTextures->ApplyTexture(2);
+
+	// Desenha face BOTTOM do cubo do skybox
+	glBegin(GL_QUADS);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y, z);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y, z + length);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y, z + length);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y, z);
+	glEnd();
+
+
+	// Aplica a textura que representa a parte da frente do skybox (UP map)
+	pTextures->ApplyTexture(3);
+
+	// Desenha face TOP do cubo do skybox
+	glBegin(GL_QUADS);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, z);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y + height, z);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y + height, z + length);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y + height, z + length);
+	glEnd();
+
+
+	// Aplica a textura que representa a parte da frente do skybox (LEFT map)
+	pTextures->ApplyTexture(4);
+
+	// Desenha face LEFT do cubo do skybox
+	glBegin(GL_QUADS);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y, z);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, z);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, z + length);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z + length);
+	glEnd();
+
+
+	// Aplica a textura que representa a parte da frente do skybox (RIGHT map)
+	pTextures->ApplyTexture(5);
+
+	// Desenha face RIGHT do cubo do skybox
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y, z);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y, z + length);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, z + length);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y + height, z);
+	glEnd();
+
+	glPopMatrix();
+}
