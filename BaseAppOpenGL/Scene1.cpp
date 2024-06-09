@@ -64,7 +64,11 @@ CScene1::CScene1()
 
 	pCena1 = NULL;
 	pCena1 = new CModel_3DS();
-	pCena1->Load("../Scene1/tubao.3ds");
+	pCena1->Load("../Scene1/Cenario.3ds");
+
+	pPedra = NULL;
+	pPedra = new CModel_3DS();
+	pPedra->Load("../Scene1/esfera_de_pedra.3ds");
 
 
 }
@@ -160,6 +164,12 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 
 	glPushMatrix();
 	pCena1->Draw();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-50, 10 ,-95);
+	glScalef(0.3,0.3,0.3);
+	pPedra->Draw();
 	glPopMatrix();
 
 

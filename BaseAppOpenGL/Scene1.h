@@ -73,7 +73,7 @@ private:
 
 
 	CModel_3DS* pCena1;
-	CModel_3DS* pCasa;
+	CModel_3DS* pPedra;
 
 };
 
