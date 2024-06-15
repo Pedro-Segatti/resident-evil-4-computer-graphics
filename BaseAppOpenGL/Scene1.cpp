@@ -35,6 +35,7 @@ CScene1::CScene1()
 	pTextures->CreateTextureClamp(3, "../Scene1/up.bmp");
 	pTextures->CreateTextureClamp(4, "../Scene1/left.bmp");
 	pTextures->CreateTextureClamp(5, "../Scene1/right.bmp");
+	pTextures->CreateTextureTGA(6, "../Scene1/tree_6.tga");
 
 
 	LightAmbient[0] = 1.0f;		LightAmbient[1] = 1.0f;		LightAmbient[2] = 1.0f;		LightAmbient[3] = 1.0f;
@@ -70,6 +71,25 @@ CScene1::CScene1()
 	pPedra = new CModel_3DS();
 	pPedra->Load("../Scene1/esfera_de_pedra.3ds");
 
+	pArvore = NULL;
+	pArvore = new CModel_3DS();
+	pArvore->Load("../Scene1/tree.3ds");
+
+	pArvore2 = NULL;
+	pArvore2 = new CModel_3DS();
+	pArvore2->Load("../Scene1/tree_2.3ds");
+
+	pArvore3 = NULL;
+	pArvore3 = new CModel_3DS();
+	pArvore3->Load("../Scene1/tree_3.3ds");
+
+	pArvore4 = NULL;
+	pArvore4 = new CModel_3DS();
+	pArvore4->Load("../Scene1/tree_4.3ds");
+
+	pArvore5 = NULL;
+	pArvore5 = new CModel_3DS();
+	pArvore5->Load("../Scene1/tree_5.3ds");
 
 }
 
@@ -163,32 +183,48 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 		pTextures);
 
 	glPushMatrix();
+	glTranslatef(0.0f, -20.0f, 0.0f);
 	pCena1->Draw();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(-50, 10 ,-95);
+	glTranslatef(-50, -10 ,-95);
 	glScalef(0.3,0.3,0.3);
 	pPedra->Draw();
 	glPopMatrix();
+
+
+	DrawTree(pArvore, 80.0f, 0.0f, -30.0f, 0.2f, 0.2f, 0.2f);
+	DrawTree(pArvore2, -20.0f, 0.0f, -50.0f, 0.1f, 0.1f, 0.1f);
+	DrawTree(pArvore3, -5.0f, -3.0f, -23.0f, 0.1f, 0.1f, 0.1f);
+	DrawTree(pArvore4, -40.0f, 0.0f, 1.0f, 0.1f, 0.1f, 0.1f);
+	DrawTree(pArvore5, -20.0f, -4.0f, 1.0f, 0.1f, 0.1f, 0.1f);
+	DrawTree(NULL, 40.0f, -5.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+	/*glPushMatrix();
+	pArvore->Draw();
+	pArvore2->Draw();
+	pArvore3->Draw();
+	pArvore4->Draw();
+	pArvore5->Draw();
+	glPopMatrix();*/
 
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 
 
-
+	
 
 
 
 	glDisable(GL_LIGHT0);
 	glDisable(GL_LIGHTING);
+
+
+	
+
 	glDisable(GL_TEXTURE_2D);
-
-
-
-
-
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//                               DESENHA OS OBJETOS DA CENA (FIM)
@@ -237,6 +273,44 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	PerspectiveMode();
 
 	return true;
+}
+
+void CScene1::DrawTree(CModel_3DS* tree, float posX, float posY, float posZ, float scaleX, float scaleY, float scaleZ)
+{
+	if (tree == NULL) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.95f);
+
+		pTextures->ApplyTexture(6);
+		glPushMatrix();
+		glTranslatef(posX, posY, posZ);
+		glScalef(scaleX, scaleY, scaleZ);
+		glBegin(GL_QUADS);
+		glNormal3f(0.0f, 0.0f, 1.0f);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-5.0, 0.0, 0.0);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(5.0, 0.0, 0.0);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(5.0, 10.0, 0.0);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-5.0, 10.0, 0.0);
+
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0, 0.0, 5.0);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(0.0, 0.0, -5.0);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(0.0, 10.0, -5.0);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(0.0, 10.0, 5.0);
+		glEnd();
+		glPopMatrix();
+
+		glDisable(GL_ALPHA_TEST);
+		glDisable(GL_BLEND);
+	}
+	else {
+		glPushMatrix();
+		glTranslatef(posX, posY, posZ);
+		glScalef(scaleX, scaleY, scaleZ);
+		tree->Draw();
+		glPopMatrix();
+	}
 }
 
 
@@ -396,47 +470,6 @@ void CScene1::DrawAxis()
 	glEnd();
 	glPopMatrix();
 }
-
-glm::vec3 CScene1::CalculateTriangleNormalVector(glm::vec3 P1, glm::vec3 P2, glm::vec3 P3)
-{
-	/*
-			   P3
-			   /\
-			  /  \
-			 /    \
-			/      \
-			+------+
-		   P1      P2
-	*/
-
-	// Calcula V1 e V2
-	glm::vec3 V1, V2;
-	V1.x = P2.x - P1.x;
-	V1.y = P2.y - P1.y;
-	V1.z = P2.z - P1.z;
-
-	V2.x = P3.x - P1.x;
-	V2.y = P3.y - P1.y;
-	V2.z = P3.z - P1.z;
-
-	// Calcula o Cross Produt (vetor perpendicular a V1 e V2)
-	glm::vec3 Normal;
-	Normal.x = V1.y * V2.z - V1.z * V2.y;
-	Normal.y = V1.z * V2.x - V1.x * V2.z;
-	Normal.z = V1.x * V2.y - V1.y * V2.x;
-
-	// Calcula a magnitude do vetor Normal
-	double magnitude = sqrt(Normal.x * Normal.x + Normal.y * Normal.y + Normal.z * Normal.z);
-
-	// Normaliza o vetor Normal (deixa todos os elementos no comprimento 0.0 a 1.0)
-	glm::vec3 NormalizedNormalVector;
-	NormalizedNormalVector.x = (Normal.x / magnitude);
-	NormalizedNormalVector.y = (Normal.y / magnitude);
-	NormalizedNormalVector.z = (Normal.z / magnitude);
-
-	return NormalizedNormalVector;
-}
-
 
 void CScene1::CreateSkyBox(float x, float y, float z,
 	float width, float height, float length,

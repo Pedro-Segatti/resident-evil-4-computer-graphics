@@ -19,6 +19,7 @@ public:
 	virtual void KeyPressed(void);					// Tratamento de teclas pressionadas
 	virtual void KeyDownPressed(WPARAM	wParam);	// Tratamento de teclas pressionadas
 	virtual int DrawGLScene(void);					// Função que desenha a cena
+	virtual void DrawTree(CModel_3DS* tree, float posX, float posY, float posZ, float scaleX, float scaleY, float scaleZ);
 
 	void CreateSkyBox(float x, float y, float z,
 		float width, float height, float length,
@@ -74,6 +75,11 @@ private:
 
 	CModel_3DS* pCena1;
 	CModel_3DS* pPedra;
+	CModel_3DS* pArvore;
+	CModel_3DS* pArvore2;
+	CModel_3DS* pArvore3;
+	CModel_3DS* pArvore4;
+	CModel_3DS* pArvore5;
 
 };
 
