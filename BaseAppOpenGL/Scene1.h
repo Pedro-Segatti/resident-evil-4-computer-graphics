@@ -81,5 +81,6 @@ private:
 	CModel_3DS* pArvore4;
 	CModel_3DS* pArvore5;
 
+	GLfloat FogColor[4];
 };
 

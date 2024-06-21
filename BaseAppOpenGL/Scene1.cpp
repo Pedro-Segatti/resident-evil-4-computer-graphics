@@ -91,6 +91,7 @@ CScene1::CScene1()
 	pArvore5 = new CModel_3DS();
 	pArvore5->Load("../Scene1/tree_5.3ds");
 
+	FogColor[0] = 0.8f; FogColor[1] = 0.78f; FogColor[2] = 0.62f; FogColor[3] = 1.0f;
 }
 
 
@@ -167,6 +168,12 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+	glEnable(GL_FOG);
+	glFogfv(GL_FOG_COLOR, FogColor);
+	glFogf(GL_FOG_START, 1.0);
+	glFogf(GL_FOG_END, 300.0);
+	glFogi(GL_FOG_MODE, GL_LINEAR);
+
 	// Atualiza a posição da fonte de luz a cada frame
 	glPushMatrix();
 	glTranslatef(LightPosition[0], LightPosition[1], LightPosition[2]);
@@ -181,6 +188,8 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	CreateSkyBox(0.0f, 100.0f, 0.0f,
 		1000.0f, 1000.0f, 1000.0f,
 		pTextures);
+
+	
 
 	glPushMatrix();
 	glTranslatef(0.0f, -20.0f, 0.0f);
@@ -225,7 +234,7 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	
 
 	glDisable(GL_TEXTURE_2D);
-
+	glDisable(GL_FOG);
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//                               DESENHA OS OBJETOS DA CENA (FIM)
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
