@@ -63,9 +63,17 @@ private:
 	// Definindo as propriedades da fonte de luz
 	GLfloat LightAmbient[4];
 	GLfloat LightDiffuse[4];
+	GLfloat Light2Diffuse[4];
 	GLfloat LightSpecular[4];
 	GLfloat LightPosition[4];
+	GLfloat Light1Position[4];
+	GLfloat Light2Position[4];
+	GLfloat LightDirection[3];
 	float fLightSpeed;
+
+	float cutoff;
+	float cosborda;
+	float borda;
 
 	// Definindo as propriedades do material
 	GLfloat MatAmbient[4];

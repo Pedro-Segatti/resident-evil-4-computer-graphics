@@ -37,22 +37,45 @@ CScene1::CScene1()
 	pTextures->CreateTextureClamp(5, "../Scene1/right.bmp");
 	pTextures->CreateTextureTGA(6, "../Scene1/tree_6.tga");
 
-
 	LightAmbient[0] = 1.0f;		LightAmbient[1] = 1.0f;		LightAmbient[2] = 1.0f;		LightAmbient[3] = 1.0f;
-	LightDiffuse[0] = 1.0f;		LightDiffuse[1] = 1.0f;		LightDiffuse[2] = 1.0f;		LightDiffuse[3] = 1.0f;
+	LightDiffuse[0] = 1.0f;		LightDiffuse[1] = 0.74f;	LightDiffuse[2] = 0.0f;		LightDiffuse[3] = 1.0f;
 	LightSpecular[0] = 1.0f;	LightSpecular[1] = 1.0f;	LightSpecular[2] = 1.0f;	LightSpecular[3] = 1.0f;
-	LightPosition[0] = 0.0f;	LightPosition[1] = 20.0f;	LightPosition[2] = 0.0f;	LightPosition[3] = 1.0f;
+	LightPosition[0] = -58.0f;	LightPosition[1] = -4.0f;	LightPosition[2] = 84.5f;	LightPosition[3] = 1.0f;
+	Light1Position[0] = -91.0f;	Light1Position[1] = -4.0f;	Light1Position[2] = 84.5f;	Light1Position[3] = 1.0f;
+	Light2Position[0] = 20.0f;	Light2Position[1] = 20.0f;	Light2Position[2] = 0.0f;	Light2Position[3] = 1.0f;
+	Light2Diffuse[0] = 1.0f;	Light2Diffuse[1] = 1.0f;	Light2Diffuse[2] = 1.0f;	Light2Diffuse[3] = 1.0f;
+	LightDirection[0] = 0.0f;	LightDirection[1] = -1.0f;	LightDirection[2] = 0.0f;
 
 	MatAmbient[0] = 0.1f;	MatAmbient[1] = 0.1f;	MatAmbient[2] = 0.1f;	MatAmbient[3] = 1.0f;
 	MatDiffuse[0] = 1.0f;	MatDiffuse[1] = 1.0f;	MatDiffuse[2] = 1.0f;	MatDiffuse[3] = 1.0f;
 	MatSpecular[0] = 0.5f;	MatSpecular[1] = 0.5f;	MatSpecular[2] = 0.5f;	MatSpecular[3] = 1.0f;
 	MatShininess = 128.0f;
 
+	borda = 10.0f;
+	cutoff = 45.0f;
+
 	// Criando a fonte de luz Point Light
 	glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, LightSpecular);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, cutoff);
+	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, borda);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, LightDirection);
+
+	glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, LightSpecular);
+	glLightfv(GL_LIGHT1, GL_POSITION, Light1Position);
+	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, cutoff);
+	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, borda);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, LightDirection);
+
+
+	glLightfv(GL_LIGHT2, GL_AMBIENT, LightAmbient);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, Light2Diffuse);
+	glLightfv(GL_LIGHT2, GL_SPECULAR, LightSpecular);
+	glLightfv(GL_LIGHT2, GL_POSITION, Light2Position);
 
 	// Criando o Material dos objetos
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MatAmbient);
@@ -151,13 +174,21 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	// Seta as posições da câmera
 	pCamera->setView();
 
-	// Desenha grid 
-	//Draw3DSGrid(20.0f, 20.0f);
+	glEnable(GL_LIGHTING);
 
-	// Desenha os eixos do sistema cartesiano
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+	glLightfv(GL_LIGHT1, GL_POSITION, Light1Position);
+	glLightfv(GL_LIGHT2, GL_POSITION, Light2Position);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, LightDirection);
+
+
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHT2);
+	
 	DrawAxis();
 
-	// Modo FILL ou WIREFRAME (pressione barra de espaço)	
+	
 	if (bIsWireframe)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else
@@ -174,13 +205,12 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	glFogf(GL_FOG_END, 300.0);
 	glFogi(GL_FOG_MODE, GL_LINEAR);
 
-	// Atualiza a posição da fonte de luz a cada frame
 	glPushMatrix();
-	glTranslatef(LightPosition[0], LightPosition[1], LightPosition[2]);
+	glTranslatef(Light2Position[0], Light2Position[1], Light2Position[2]);
 	glutSolidSphere(0.5, 10, 10);
 	glPopMatrix();
 
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+	
 
 	glEnable(GL_TEXTURE_2D);
 	
@@ -259,16 +289,9 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 
 	DrawToten(40.0f, -0.8f, -50.0f, 1.3f, 1.3f, 1.3f);
 
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-
-
-	
-
-
-
 	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHT1);
+	glDisable(GL_LIGHT2);
 	glDisable(GL_LIGHTING);
 
 
@@ -601,27 +624,27 @@ void CScene1::KeyPressed(void) // Tratamento de teclas pressionadas
 	if (GetKeyState(VK_UP) & 0x80)
 	{
 
-		LightPosition[2] -= fLightSpeed;
+		Light2Position[2] -= fLightSpeed;
 	}
 	if (GetKeyState(VK_DOWN) & 0x80)
 	{
-		LightPosition[2] += fLightSpeed;
+		Light2Position[2] += fLightSpeed;
 	}
 	if (GetKeyState(VK_LEFT) & 0x80)
 	{
-		LightPosition[0] -= fLightSpeed;
+		Light2Position[0] -= fLightSpeed;
 	}
 	if (GetKeyState(VK_RIGHT) & 0x80)
 	{
-		LightPosition[0] += fLightSpeed;
+		Light2Position[0] += fLightSpeed;
 	}
 	if (GetKeyState(VK_PRIOR) & 0x80)
 	{
-		LightPosition[1] += fLightSpeed;
+		Light2Position[1] += fLightSpeed;
 	}
 	if (GetKeyState(VK_NEXT) & 0x80)
 	{
-		LightPosition[1] -= fLightSpeed;
+		Light2Position[1] -= fLightSpeed;
 	}
 
 }

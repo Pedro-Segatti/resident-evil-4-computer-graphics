@@ -7,16 +7,12 @@
       "RelativeMoniker": "D:0:0:{CF6CE879-B5C1-48AB-8B7E-D79DDA6358B6}|BaseAppOpenGL\\BaseAppOpenGL.vcxproj|solutionrelative:BaseAppOpenGL\\Scene1.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CF6CE879-B5C1-48AB-8B7E-D79DDA6358B6}|BaseAppOpenGL\\BaseAppOpenGL.vcxproj|C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\SceneManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{CF6CE879-B5C1-48AB-8B7E-D79DDA6358B6}|BaseAppOpenGL\\BaseAppOpenGL.vcxproj|solutionrelative:BaseAppOpenGL\\SceneManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CF6CE879-B5C1-48AB-8B7E-D79DDA6358B6}|BaseAppOpenGL\\BaseAppOpenGL.vcxproj|C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\Scene1.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{CF6CE879-B5C1-48AB-8B7E-D79DDA6358B6}|BaseAppOpenGL\\BaseAppOpenGL.vcxproj|solutionrelative:BaseAppOpenGL\\Scene1.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CF6CE879-B5C1-48AB-8B7E-D79DDA6358B6}|BaseAppOpenGL\\BaseAppOpenGL.vcxproj|C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\Main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{CF6CE879-B5C1-48AB-8B7E-D79DDA6358B6}|BaseAppOpenGL\\BaseAppOpenGL.vcxproj|solutionrelative:BaseAppOpenGL\\Main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{CF6CE879-B5C1-48AB-8B7E-D79DDA6358B6}|BaseAppOpenGL\\BaseAppOpenGL.vcxproj|C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\SceneManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{CF6CE879-B5C1-48AB-8B7E-D79DDA6358B6}|BaseAppOpenGL\\BaseAppOpenGL.vcxproj|solutionrelative:BaseAppOpenGL\\SceneManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +30,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "SceneManager.cpp",
               "DocumentMoniker": "C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\SceneManager.cpp",
               "RelativeDocumentMoniker": "BaseAppOpenGL\\SceneManager.cpp",
@@ -53,32 +49,20 @@
               "RelativeDocumentMoniker": "BaseAppOpenGL\\Scene1.cpp",
               "ToolTip": "C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\Scene1.cpp",
               "RelativeToolTip": "BaseAppOpenGL\\Scene1.cpp",
-              "ViewState": "AQIAAE4AAAAAAAAAAAAAAF8AAAA8AAAA",
+              "ViewState": "AQIAALEAAAAAAAAAAAAAALQAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-06-05T21:48:59.394Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Main.cpp",
-              "DocumentMoniker": "C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\Main.cpp",
-              "RelativeDocumentMoniker": "BaseAppOpenGL\\Main.cpp",
-              "ToolTip": "C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\Main.cpp",
-              "RelativeToolTip": "BaseAppOpenGL\\Main.cpp",
-              "ViewState": "AQIAAGIBAAAAAAAAAAAAAHEBAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-06-05T00:44:16.623Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Scene1.h",
               "DocumentMoniker": "C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\Scene1.h",
               "RelativeDocumentMoniker": "BaseAppOpenGL\\Scene1.h",
               "ToolTip": "C:\\Users\\edumo\\Documents\\GitHub\\resident-evil-4-computer-graphics\\BaseAppOpenGL\\Scene1.h",
               "RelativeToolTip": "BaseAppOpenGL\\Scene1.h",
-              "ViewState": "AQIAAD8AAAAAAAAAAAAAAFMAAAAVAAAA",
+              "ViewState": "AQIAADAAAAAAAAAAAAAAAEQAAAAPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-06-05T00:17:25.113Z",
               "EditorCaption": ""
