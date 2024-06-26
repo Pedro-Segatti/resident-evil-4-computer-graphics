@@ -437,12 +437,75 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	glDisable(GL_LIGHTING);
 
 
-
-
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_FOG);
 
-	DrawTransparentWater(40.0f, -0.8f, -50.0f, 1.3f, 1.3f, 1.3f);
+	DrawTransparentWater();
+
+	// Desenhar o murinho ao redor da base da fonte de água
+	glColor3f(0.5f, 0.3f, 0.2f);
+	glBegin(GL_QUADS);
+	// Frente externa
+	glVertex3f(-baseWidth / 2 - wallThickness, 0, baseDepth / 2 + wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, 0, baseDepth / 2 + wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, baseDepth / 2 + wallThickness);
+	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, baseDepth / 2 + wallThickness);
+	// Trás externa
+	glVertex3f(-baseWidth / 2 - wallThickness, 0, -baseDepth / 2 - wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, 0, -baseDepth / 2 - wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
+	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
+	// Direita externa
+	glVertex3f(baseWidth / 2 + wallThickness, 0, baseDepth / 2 + wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, 0, -baseDepth / 2 - wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, baseDepth / 2 + wallThickness);
+	// Esquerda externa
+	glVertex3f(-baseWidth / 2 - wallThickness, 0, baseDepth / 2 + wallThickness);
+	glVertex3f(-baseWidth / 2 - wallThickness, 0, -baseDepth / 2 - wallThickness);
+	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
+	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, baseDepth / 2 + wallThickness);
+	// Frente interna
+	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
+	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
+	glVertex3f(baseWidth / 2, wallHeight, baseDepth / 2);
+	glVertex3f(-baseWidth / 2, wallHeight, baseDepth / 2);
+	// Trás interna
+	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
+	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
+	glVertex3f(baseWidth / 2, wallHeight, -baseDepth / 2);
+	glVertex3f(-baseWidth / 2, wallHeight, -baseDepth / 2);
+	// Direita interna
+	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
+	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
+	glVertex3f(baseWidth / 2, wallHeight, -baseDepth / 2);
+	glVertex3f(baseWidth / 2, wallHeight, baseDepth / 2);
+	// Esquerda interna
+	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
+	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
+	glVertex3f(-baseWidth / 2, wallHeight, -baseDepth / 2);
+	glVertex3f(-baseWidth / 2, wallHeight, baseDepth / 2);
+	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, baseDepth / 2 + wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, baseDepth / 2 + wallThickness);
+	glVertex3f(baseWidth / 2, wallHeight, baseDepth / 2);
+	glVertex3f(-baseWidth / 2, wallHeight, baseDepth / 2);
+	// Trás
+	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
+	glVertex3f(baseWidth / 2, wallHeight, -baseDepth / 2);
+	glVertex3f(-baseWidth / 2, wallHeight, -baseDepth / 2);
+	// Direita
+	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, baseDepth / 2 + wallThickness);
+	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
+	glVertex3f(baseWidth / 2, wallHeight, -baseDepth / 2);
+	glVertex3f(baseWidth / 2, wallHeight, baseDepth / 2);
+	// Esquerda
+	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, baseDepth / 2 + wallThickness);
+	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
+	glVertex3f(-baseWidth / 2, wallHeight, -baseDepth / 2);
+	glVertex3f(-baseWidth / 2, wallHeight, baseDepth / 2);
+	glEnd();
+	glColor3f(1.0f, 0.0f, 0.0f);
 
 	/*
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -607,18 +670,11 @@ void CScene1::DrawTree(CModel_3DS* tree, float posX, float posY, float posZ, flo
 	}
 }
 
-void CScene1::DrawTransparentWater(float posX, float posY, float posZ, float scaleX, float scaleY, float scaleZ)
+void CScene1::DrawTransparentWater()
 {	
-	float prismWidth = 2.5f;
-	float prismDepth = 2.5f;
-	float prismHeight = 8.0f;
-	float tetrahedronBaseSize = 2.5f;
-	float tetrahedronHeight = 4.0f;
 	float baseWidth = 10.0f;
 	float baseDepth = 10.0f;
-	float baseHeight = 0.1f;
-	float wallThickness = 0.5f;
-	float wallHeight = 2.0f;
+	float baseHeight = 0.3f;
 
 	
 	glDisable(GL_TEXTURE_2D);
@@ -643,8 +699,6 @@ void CScene1::DrawTransparentWater(float posX, float posY, float posZ, float sca
 	glEnd();
 	glPopMatrix();
 	glDisable(GL_BLEND);
-
-	
 }
 
 
