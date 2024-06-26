@@ -1,2 +1,6 @@
-﻿  Scene1.cpp
+﻿  Main.cpp
+C:\Users\edumo\Documents\GitHub\resident-evil-4-computer-graphics\BaseAppOpenGL\Main.cpp(182,3): warning C4838: a conversão de 'int' em 'BYTE' requer uma conversão de restrição
+  Scene1.cpp
+  SceneManager.cpp
+  Gerando Código...
   BaseAppOpenGL.vcxproj -> C:\Users\edumo\Documents\GitHub\resident-evil-4-computer-graphics\Debug\BaseAppOpenGL.exe

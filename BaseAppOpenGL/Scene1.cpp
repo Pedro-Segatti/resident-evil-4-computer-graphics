@@ -36,6 +36,8 @@ CScene1::CScene1()
 	pTextures->CreateTextureClamp(4, "../Scene1/left.bmp");
 	pTextures->CreateTextureClamp(5, "../Scene1/right.bmp");
 	pTextures->CreateTextureTGA(6, "../Scene1/tree_6.tga");
+	pTextures->CreateTextureMipMap(7, "../Scene1/Sphere.bmp");
+	pTextures->CreateTextureMipMap(8, "../Scene1/carpa.jpg");
 
 	LightAmbient[0] = 1.0f;		LightAmbient[1] = 1.0f;		LightAmbient[2] = 1.0f;		LightAmbient[3] = 1.0f;
 	LightDiffuse[0] = 1.0f;		LightDiffuse[1] = 0.74f;	LightDiffuse[2] = 0.0f;		LightDiffuse[3] = 1.0f;
@@ -115,6 +117,19 @@ CScene1::CScene1()
 	pArvore5->Load("../Scene1/tree_5.3ds");
 
 	FogColor[0] = 0.8f; FogColor[1] = 0.78f; FogColor[2] = 0.62f; FogColor[3] = 1.0f;
+
+
+	pTextures->CreateTextureMipMap(11, "../Scene1/SphereMap.bmp");
+
+	// CubeMaps
+	texturesCubeMap[0] = "../Scene1/cm_right.bmp";
+	texturesCubeMap[1] = "../Scene1/cm_left.bmp";
+	texturesCubeMap[2] = "../Scene1/cm_up.bmp";
+	texturesCubeMap[3] = "../Scene1/cm_down.bmp";
+	texturesCubeMap[4] = "../Scene1/cm_front.bmp";
+	texturesCubeMap[5] = "../Scene1/cm_back.bmp";
+	pTextures->CreateTextureCubeMap(texturesCubeMap);
+
 }
 
 
@@ -199,20 +214,29 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+	
+
+	
 	glEnable(GL_FOG);
 	glFogfv(GL_FOG_COLOR, FogColor);
 	glFogf(GL_FOG_START, 1.0);
 	glFogf(GL_FOG_END, 300.0);
 	glFogi(GL_FOG_MODE, GL_LINEAR);
-
-	glPushMatrix();
-	glTranslatef(Light2Position[0], Light2Position[1], Light2Position[2]);
-	glutSolidSphere(0.5, 10, 10);
-	glPopMatrix();
-
 	
 
 	glEnable(GL_TEXTURE_2D);
+
+	glEnable(GL_NORMALIZE);
+	pTextures->BeginSphereMapping(7);
+
+	glPushMatrix();
+	glTranslatef(Light2Position[0], Light2Position[1], Light2Position[2]);
+	//glutSolidSphere(0.5, 10, 10);
+	auxSolidSphere(2.0);
+	glPopMatrix();
+
+	pTextures->EndSphereMapping();
+	glDisable(GL_NORMALIZE);
 	
 	// Desenha o SkyBox
 	CreateSkyBox(0.0f, 100.0f, 0.0f,
@@ -287,7 +311,125 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	DrawTree(pArvore3, 0.0f, 0.0f, -70.0f, 0.12f, 0.12f, 0.12f);
 	DrawTree(pArvore4, -80.0f, 0.0f, 10.0f, 0.16f, 0.16f, 0.16f);
 
-	DrawToten(40.0f, -0.8f, -50.0f, 1.3f, 1.3f, 1.3f);
+	glTranslatef(40.0f, -0.8f, -50.0f);
+	glScalef(1.3f, 1.3f, 1.3f);
+
+	float prismWidth = 2.5f;
+	float prismDepth = 2.5f;
+	float prismHeight = 8.0f;
+	float tetrahedronBaseSize = 2.5f;
+	float tetrahedronHeight = 4.0f;
+	float baseWidth = 10.0f;
+	float baseDepth = 10.0f;
+	float baseHeight = 0.1f;
+	float wallThickness = 0.5f;
+	float wallHeight = 2.0f;
+
+	glPushMatrix();
+	// TOTEN
+	pTextures->BeginSphereMapping(7);
+	// Mover para cima da base da fonte de água
+	glBegin(GL_QUADS);
+	glVertex3f(-prismWidth / 2, 0, prismDepth / 2);
+	glVertex3f(prismWidth / 2, 0, prismDepth / 2);
+	glVertex3f(prismWidth / 2, prismHeight, prismDepth / 2);
+	glVertex3f(-prismWidth / 2, prismHeight, prismDepth / 2);
+	glVertex3f(-prismWidth / 2, 0, -prismDepth / 2);
+	glVertex3f(prismWidth / 2, 0, -prismDepth / 2);
+	glVertex3f(prismWidth / 2, prismHeight, -prismDepth / 2);
+	glVertex3f(-prismWidth / 2, prismHeight, -prismDepth / 2);
+	glVertex3f(prismWidth / 2, 0, prismDepth / 2);
+	glVertex3f(prismWidth / 2, 0, -prismDepth / 2);
+	glVertex3f(prismWidth / 2, prismHeight, -prismDepth / 2);
+	glVertex3f(prismWidth / 2, prismHeight, prismDepth / 2);
+	glVertex3f(-prismWidth / 2, 0, prismDepth / 2);
+	glVertex3f(-prismWidth / 2, 0, -prismDepth / 2);
+	glVertex3f(-prismWidth / 2, prismHeight, -prismDepth / 2);
+	glVertex3f(-prismWidth / 2, prismHeight, prismDepth / 2);
+	glVertex3f(-prismWidth / 2, prismHeight, prismDepth / 2);
+	glVertex3f(prismWidth / 2, prismHeight, prismDepth / 2);
+	glVertex3f(prismWidth / 2, prismHeight, -prismDepth / 2);
+	glVertex3f(-prismWidth / 2, prismHeight, -prismDepth / 2);
+	glVertex3f(-prismWidth / 2, 0, prismDepth / 2);
+	glVertex3f(prismWidth / 2, 0, prismDepth / 2);
+	glVertex3f(prismWidth / 2, 0, -prismDepth / 2);
+	glVertex3f(-prismWidth / 2, 0, -prismDepth / 2);
+	glEnd();
+
+	// Ponta do Toten
+	glTranslatef(0.0f, prismHeight, 0.0f);  // Mover para o topo do prisma
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0, tetrahedronHeight, 0);
+	glVertex3f(-tetrahedronBaseSize / 2, 0, tetrahedronBaseSize / 2);
+	glVertex3f(tetrahedronBaseSize / 2, 0, tetrahedronBaseSize / 2);
+	glVertex3f(0, tetrahedronHeight, 0);
+	glVertex3f(tetrahedronBaseSize / 2, 0, tetrahedronBaseSize / 2);
+	glVertex3f(tetrahedronBaseSize / 2, 0, -tetrahedronBaseSize / 2);
+	glVertex3f(0, tetrahedronHeight, 0);
+	glVertex3f(tetrahedronBaseSize / 2, 0, -tetrahedronBaseSize / 2);
+	glVertex3f(-tetrahedronBaseSize / 2, 0, -tetrahedronBaseSize / 2);
+	glVertex3f(0, tetrahedronHeight, 0);
+	glVertex3f(-tetrahedronBaseSize / 2, 0, -tetrahedronBaseSize / 2);
+	glVertex3f(-tetrahedronBaseSize / 2, 0, tetrahedronBaseSize / 2);
+
+	glEnd();
+	pTextures->EndSphereMapping();
+	glPopMatrix();
+
+	glPushMatrix();
+
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	pTextures->ApplyTexture(8);
+	// Desenhar a base da fonte de água (prisma retangular baixo)
+	glBegin(GL_QUADS);
+	// Frente
+	glTexCoord2f(0.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f);
+
+	glTexCoord2f(0.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f);
+
+	glVertex3f(-baseWidth / 2, 0, baseDepth / 2);
+	glVertex3f(baseWidth / 2, 0, baseDepth / 2);
+	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
+	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
+
+	// Trás
+	glVertex3f(-baseWidth / 2, 0, -baseDepth / 2);
+	glVertex3f(baseWidth / 2, 0, -baseDepth / 2);
+	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
+	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
+
+	// Direita
+	glVertex3f(baseWidth / 2, 0, baseDepth / 2);
+	glVertex3f(baseWidth / 2, 0, -baseDepth / 2);
+	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
+	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
+
+	// Esquerda
+	glVertex3f(-baseWidth / 2, 0, baseDepth / 2);
+	glVertex3f(-baseWidth / 2, 0, -baseDepth / 2);
+	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
+	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
+
+	// Topo
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
+
+
+
+	glEnd();
+	glPopMatrix();
+
+
+
 
 	glDisable(GL_LIGHT0);
 	glDisable(GL_LIGHT1);
@@ -295,10 +437,89 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	glDisable(GL_LIGHTING);
 
 
-	
+
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_FOG);
+
+	DrawTransparentWater(40.0f, -0.8f, -50.0f, 1.3f, 1.3f, 1.3f);
+
+	/*
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glEnable(GL_NORMALIZE);
+	pTextures->BeginSphereMapping(11);
+
+	glPushMatrix();
+	glTranslatef(-2.0f, 5.0f, 0.0f);
+	auxSolidSphere(2.0);
+	glPopMatrix();
+
+	pTextures->EndSphereMapping();
+	glDisable(GL_NORMALIZE);
+
+
+
+	// Desenha Esfera com CubeMapping
+	glEnable(GL_NORMALIZE);
+	pTextures->BeginCubeMapping();
+	glPushMatrix();
+	glTranslatef(2.0f, 5.0f, 0.0f);
+	//glRotatef(fAngle, 0.0f, 1.0f, 0.0f);
+	//glScalef(10.0f, 10.0f, 10.0f);
+
+	glMatrixMode(GL_TEXTURE);
+	glPushMatrix();
+	// Invert camera matrix (rotation only) and apply to 
+			// texture coordinates
+	M3DMatrix44f m, invert;
+	M3DVector3f x, vUp, z;
+
+	// Make rotation matrix
+	// Z vector is reversed
+	z[0] = -pCamera->Forward[0];
+	z[1] = -pCamera->Forward[1];
+	z[2] = -pCamera->Forward[2];
+
+	vUp[0] = pCamera->Up[0];
+	vUp[1] = pCamera->Up[1];
+	vUp[2] = pCamera->Up[2];
+
+	// X vector = Y cross Z 
+	m3dCrossProduct(x, vUp, z);
+
+	// Matrix has no translation information and is
+	// transposed.... (rows instead of columns)
+#define M(row,col)  m[col*4+row]
+	M(0, 0) = x[0];
+	M(0, 1) = x[1];
+	M(0, 2) = x[2];
+	M(0, 3) = 0.0;
+	M(1, 0) = pCamera->Up[0];
+	M(1, 1) = pCamera->Up[1];
+	M(1, 2) = pCamera->Up[2];
+	M(1, 3) = 0.0;
+	M(2, 0) = z[0];
+	M(2, 1) = z[1];
+	M(2, 2) = z[2];
+	M(2, 3) = 0.0;
+	M(3, 0) = 0.0;
+	M(3, 1) = 0.0;
+	M(3, 2) = 0.0;
+	M(3, 3) = 1.0;
+#undef M 
+
+	m3dInvertMatrix44(invert, m);
+	glMultMatrixf(invert);
+
+	auxSolidSphere(2.0);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	pTextures->EndCubeMapping();
+	glDisable(GL_NORMALIZE);
+	*/
+	
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//                               DESENHA OS OBJETOS DA CENA (FIM)
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -386,11 +607,8 @@ void CScene1::DrawTree(CModel_3DS* tree, float posX, float posY, float posZ, flo
 	}
 }
 
-void CScene1::DrawToten(float posX, float posY, float posZ, float scaleX, float scaleY, float scaleZ)
-{
-	glTranslatef(posX, posY, posZ);
-	glScalef(scaleX, scaleY, scaleZ);
-	
+void CScene1::DrawTransparentWater(float posX, float posY, float posZ, float scaleX, float scaleY, float scaleZ)
+{	
 	float prismWidth = 2.5f;
 	float prismDepth = 2.5f;
 	float prismHeight = 8.0f;
@@ -402,164 +620,31 @@ void CScene1::DrawToten(float posX, float posY, float posZ, float scaleX, float 
 	float wallThickness = 0.5f;
 	float wallHeight = 2.0f;
 
-	// Desenhar a base da fonte de água (prisma retangular baixo)
+	
+	glDisable(GL_TEXTURE_2D);
+
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	glColor4f(0.0f, 0.0f, 1.0f, 0.3f);
+
+	glPushMatrix();
+	glTranslatef(0.0f, 1.0f, 0.0f);
+	
 	glBegin(GL_QUADS);
-	// Frente
-	glVertex3f(-baseWidth / 2, 0, baseDepth / 2);
-	glVertex3f(baseWidth / 2, 0, baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
-	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
 
-	// Trás
-	glVertex3f(-baseWidth / 2, 0, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, 0, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
-
-	// Direita
-	glVertex3f(baseWidth / 2, 0, baseDepth / 2);
-	glVertex3f(baseWidth / 2, 0, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
-
-	// Esquerda
-	glVertex3f(-baseWidth / 2, 0, baseDepth / 2);
-	glVertex3f(-baseWidth / 2, 0, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
-
-	// Topo
+	glNormal3f(0.0f, 0.0f, -1.0f);
 	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
 	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
 	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
 	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
 
 	glEnd();
+	glPopMatrix();
+	glDisable(GL_BLEND);
 
-	// Desenhar o murinho ao redor da base da fonte de água
-	glBegin(GL_QUADS);
-	glColor3f(1.0f, 1.0f, 0.0f);
-	// Frente externa
-	glVertex3f(-baseWidth / 2 - wallThickness, 0, baseDepth / 2 + wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, 0, baseDepth / 2 + wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, baseDepth / 2 + wallThickness);
-	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, baseDepth / 2 + wallThickness);
-
-	// Trás externa
-	glVertex3f(-baseWidth / 2 - wallThickness, 0, -baseDepth / 2 - wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, 0, -baseDepth / 2 - wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
-	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
-
-	// Direita externa
-	glVertex3f(baseWidth / 2 + wallThickness, 0, baseDepth / 2 + wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, 0, -baseDepth / 2 - wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, baseDepth / 2 + wallThickness);
-
-	// Esquerda externa
-	glVertex3f(-baseWidth / 2 - wallThickness, 0, baseDepth / 2 + wallThickness);
-	glVertex3f(-baseWidth / 2 - wallThickness, 0, -baseDepth / 2 - wallThickness);
-	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
-	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, baseDepth / 2 + wallThickness);
-
-	// Frente interna
-	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
-	glVertex3f(baseWidth / 2, wallHeight, baseDepth / 2);
-	glVertex3f(-baseWidth / 2, wallHeight, baseDepth / 2);
-
-	// Trás interna
-	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, wallHeight, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, wallHeight, -baseDepth / 2);
-
-	// Direita interna
-	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, wallHeight, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, wallHeight, baseDepth / 2);
-
-	// Esquerda interna
-	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
-	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, wallHeight, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, wallHeight, baseDepth / 2);
-
-	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, baseDepth / 2 + wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, baseDepth / 2 + wallThickness);
-	glVertex3f(baseWidth / 2, wallHeight, baseDepth / 2);
-	glVertex3f(-baseWidth / 2, wallHeight, baseDepth / 2);
-
-	// Trás
-	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
-	glVertex3f(baseWidth / 2, wallHeight, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, wallHeight, -baseDepth / 2);
-
-	// Direita
-	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, baseDepth / 2 + wallThickness);
-	glVertex3f(baseWidth / 2 + wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
-	glVertex3f(baseWidth / 2, wallHeight, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, wallHeight, baseDepth / 2);
-
-	// Esquerda
-	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, baseDepth / 2 + wallThickness);
-	glVertex3f(-baseWidth / 2 - wallThickness, wallHeight, -baseDepth / 2 - wallThickness);
-	glVertex3f(-baseWidth / 2, wallHeight, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, wallHeight, baseDepth / 2);
-
-	glEnd();
-
-	glColor3f(1.0f, 0.0f, 0.0f);
-	// TOTEN
-	glTranslatef(0.0f, baseHeight, 0.0f);  // Mover para cima da base da fonte de água
-	glBegin(GL_QUADS);
-	glVertex3f(-prismWidth / 2, 0, prismDepth / 2);
-	glVertex3f(prismWidth / 2, 0, prismDepth / 2);
-	glVertex3f(prismWidth / 2, prismHeight, prismDepth / 2);
-	glVertex3f(-prismWidth / 2, prismHeight, prismDepth / 2);
-	glVertex3f(-prismWidth / 2, 0, -prismDepth / 2);
-	glVertex3f(prismWidth / 2, 0, -prismDepth / 2);
-	glVertex3f(prismWidth / 2, prismHeight, -prismDepth / 2);
-	glVertex3f(-prismWidth / 2, prismHeight, -prismDepth / 2);
-	glVertex3f(prismWidth / 2, 0, prismDepth / 2);
-	glVertex3f(prismWidth / 2, 0, -prismDepth / 2);
-	glVertex3f(prismWidth / 2, prismHeight, -prismDepth / 2);
-	glVertex3f(prismWidth / 2, prismHeight, prismDepth / 2);
-	glVertex3f(-prismWidth / 2, 0, prismDepth / 2);
-	glVertex3f(-prismWidth / 2, 0, -prismDepth / 2);
-	glVertex3f(-prismWidth / 2, prismHeight, -prismDepth / 2);
-	glVertex3f(-prismWidth / 2, prismHeight, prismDepth / 2);
-	glVertex3f(-prismWidth / 2, prismHeight, prismDepth / 2);
-	glVertex3f(prismWidth / 2, prismHeight, prismDepth / 2);
-	glVertex3f(prismWidth / 2, prismHeight, -prismDepth / 2);
-	glVertex3f(-prismWidth / 2, prismHeight, -prismDepth / 2);
-	glVertex3f(-prismWidth / 2, 0, prismDepth / 2);
-	glVertex3f(prismWidth / 2, 0, prismDepth / 2);
-	glVertex3f(prismWidth / 2, 0, -prismDepth / 2);
-	glVertex3f(-prismWidth / 2, 0, -prismDepth / 2);
-	glEnd();
-
-	// Ponta do Toten
-	glTranslatef(0.0f, prismHeight, 0.0f);  // Mover para o topo do prisma
-	glColor3f(0.0f, 0.0f, 0.0f);
-	glBegin(GL_TRIANGLES);
-	glVertex3f(0, tetrahedronHeight, 0);
-	glVertex3f(-tetrahedronBaseSize / 2, 0, tetrahedronBaseSize / 2);
-	glVertex3f(tetrahedronBaseSize / 2, 0, tetrahedronBaseSize / 2);
-	glVertex3f(0, tetrahedronHeight, 0);
-	glVertex3f(tetrahedronBaseSize / 2, 0, tetrahedronBaseSize / 2);
-	glVertex3f(tetrahedronBaseSize / 2, 0, -tetrahedronBaseSize / 2);
-	glVertex3f(0, tetrahedronHeight, 0);
-	glVertex3f(tetrahedronBaseSize / 2, 0, -tetrahedronBaseSize / 2);
-	glVertex3f(-tetrahedronBaseSize / 2, 0, -tetrahedronBaseSize / 2);
-	glVertex3f(0, tetrahedronHeight, 0);
-	glVertex3f(-tetrahedronBaseSize / 2, 0, -tetrahedronBaseSize / 2);
-	glVertex3f(-tetrahedronBaseSize / 2, 0, tetrahedronBaseSize / 2);
-
-	glEnd();
+	
 }
 
 

@@ -597,12 +597,12 @@ void CTexture::EndSphereMapping()
 
 void CTexture::BeginCubeMapping()
 {
-	//glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_X, this->cubeTextureArray[0]);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, this->cubeTextureArray[1]);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, this->cubeTextureArray[2]);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, this->cubeTextureArray[3]);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, this->cubeTextureArray[4]);
-	//glBindTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, this->cubeTextureArray[5]);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_X, this->cubeTextureArray[0]);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, this->cubeTextureArray[1]);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, this->cubeTextureArray[2]);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, this->cubeTextureArray[3]);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, this->cubeTextureArray[4]);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, this->cubeTextureArray[5]);
 
 	glEnable(GL_TEXTURE_CUBE_MAP);
 

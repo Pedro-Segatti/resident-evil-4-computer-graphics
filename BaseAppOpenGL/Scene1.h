@@ -20,7 +20,7 @@ public:
 	virtual void KeyDownPressed(WPARAM	wParam);	// Tratamento de teclas pressionadas
 	virtual int DrawGLScene(void);					// Função que desenha a cena
 	virtual void DrawTree(CModel_3DS* tree, float posX, float posY, float posZ, float scaleX, float scaleY, float scaleZ);
-	virtual void DrawToten(float posX, float posY, float posZ, float scaleX, float scaleY, float scaleZ);
+	virtual void DrawTransparentWater(float posX, float posY, float posZ, float scaleX, float scaleY, float scaleZ);
 
 	void CreateSkyBox(float x, float y, float z,
 		float width, float height, float length,
@@ -91,5 +91,7 @@ private:
 	CModel_3DS* pArvore5;
 
 	GLfloat FogColor[4];
+
+	LPSTR texturesCubeMap[6];
 };
 
