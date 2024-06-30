@@ -35,7 +35,7 @@ private:
 	bool	keys[256];		// Array usado para rotinas do teclado
 	bool	active;			// Window Active Flag Set To TRUE By Default
 	bool	fullscreen;		// Exibir janela em modo fullscreem (TRUE) ou em janela (FALSE)
-
+	bool	showFog = true;
 
 	CCamera* pCamera;	// Gerencia câmera OpenGL
 	float fDeltaY;				// Rotação da câmera OpenGL no eixo Y

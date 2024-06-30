@@ -220,12 +220,13 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 
 	
 
-	
-	glEnable(GL_FOG);
-	glFogfv(GL_FOG_COLOR, FogColor);
-	glFogf(GL_FOG_START, 1.0);
-	glFogf(GL_FOG_END, 300.0);
-	glFogi(GL_FOG_MODE, GL_LINEAR);
+	if (showFog) {
+		glEnable(GL_FOG);
+		glFogfv(GL_FOG_COLOR, FogColor);
+		glFogf(GL_FOG_START, 1.0);
+		glFogf(GL_FOG_END, 300.0);
+		glFogi(GL_FOG_MODE, GL_LINEAR);
+	}
 	
 
 	glEnable(GL_TEXTURE_2D);
@@ -429,9 +430,10 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	glDisable(GL_LIGHT2);
 	glDisable(GL_LIGHTING);
 
-
 	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_FOG);
+	if (showFog) {
+		glDisable(GL_FOG);
+	}
 
 	DrawTransparentWater();
 
@@ -721,6 +723,9 @@ void CScene1::KeyDownPressed(WPARAM	wParam) // Tratamento de teclas pressionadas
 	case VK_RETURN:
 		break;
 
+	case 'F':
+		showFog = !showFog;
+		break;
 	}
 
 }
