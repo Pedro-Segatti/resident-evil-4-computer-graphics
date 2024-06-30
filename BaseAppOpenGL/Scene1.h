@@ -93,5 +93,11 @@ private:
 	GLfloat FogColor[4];
 
 	LPSTR texturesCubeMap[6];
+	GLuint textureArray[2];
+
+	PFNGLMULTITEXCOORD2FARBPROC glMultiTexCoord2fARB = NULL;
+	PFNGLACTIVETEXTUREARBPROC   glActiveTextureARB = NULL;
+	PFNGLCLIENTACTIVETEXTUREARBPROC glClientActiveTextureARB = NULL;
+
 };
 

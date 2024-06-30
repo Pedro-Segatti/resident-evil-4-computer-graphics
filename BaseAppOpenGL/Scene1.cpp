@@ -38,6 +38,7 @@ CScene1::CScene1()
 	pTextures->CreateTextureTGA(6, "../Scene1/tree_6.tga");
 	pTextures->CreateTextureMipMap(7, "../Scene1/Sphere.bmp");
 	pTextures->CreateTextureMipMap(8, "../Scene1/carpa.jpg");
+	pTextures->CreateTextureMipMap(9, "../Scene1/cardume.png");
 
 	LightAmbient[0] = 1.0f;		LightAmbient[1] = 1.0f;		LightAmbient[2] = 1.0f;		LightAmbient[3] = 1.0f;
 	LightDiffuse[0] = 1.0f;		LightDiffuse[1] = 0.74f;	LightDiffuse[2] = 0.0f;		LightDiffuse[3] = 1.0f;
@@ -130,8 +131,11 @@ CScene1::CScene1()
 	texturesCubeMap[5] = "../Scene1/cm_back.bmp";
 	pTextures->CreateTextureCubeMap(texturesCubeMap);
 
-}
+	glMultiTexCoord2fARB = (PFNGLMULTITEXCOORD2FARBPROC) wglGetProcAddress("glMultiTexCoord2fARB");
+	glActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC) wglGetProcAddress("glActiveTextureARB");
+	glClientActiveTextureARB = (PFNGLCLIENTACTIVETEXTUREARBPROC) wglGetProcAddress("glClientActiveTextureARB");
 
+}
 
 CScene1::~CScene1(void)
 {
@@ -377,58 +381,47 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	glPopMatrix();
 
 	glPushMatrix();
-
-
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	
+	//Multi textura
+	glPushAttrib(GL_TEXTURE_BIT);
+	
+	glActiveTextureARB(GL_TEXTURE0_ARB);
+	glEnable(GL_TEXTURE_2D);
 	pTextures->ApplyTexture(8);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	
+	glActiveTextureARB(GL_TEXTURE1_ARB);
+	glEnable(GL_TEXTURE_2D);
+	pTextures->ApplyTexture(9);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
 	// Desenhar a base da fonte de água (prisma retangular baixo)
 	glBegin(GL_QUADS);
-	// Frente
-	glTexCoord2f(0.0f, 0.0f);
-	glTexCoord2f(1.0f, 0.0f);
-	glTexCoord2f(1.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);
 
-	glTexCoord2f(0.0f, 0.0f);
-	glTexCoord2f(1.0f, 0.0f);
-	glTexCoord2f(1.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);
-
-	glVertex3f(-baseWidth / 2, 0, baseDepth / 2);
-	glVertex3f(baseWidth / 2, 0, baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
+	glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 0.0f); 
+	glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.0f, 0.0f);
 	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
 
-	// Trás
-	glVertex3f(-baseWidth / 2, 0, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, 0, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
-
-	// Direita
-	glVertex3f(baseWidth / 2, 0, baseDepth / 2);
-	glVertex3f(baseWidth / 2, 0, -baseDepth / 2);
-	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
+	glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0f, 0.0f);
+	glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 1.0f, 0.0f);
 	glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
 
-	// Esquerda
-	glVertex3f(-baseWidth / 2, 0, baseDepth / 2);
-	glVertex3f(-baseWidth / 2, 0, -baseDepth / 2);
+	glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 1.0f, 1.0f); 
+	glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 1.0f, 1.0f);
+	glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
+
+	glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0.0f, 1.0f);
+	glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0.0f, 1.0f);
 	glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
-	glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
-
-	// Topo
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-baseWidth / 2, baseHeight, baseDepth / 2);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(baseWidth / 2, baseHeight, baseDepth / 2);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(baseWidth / 2, baseHeight, -baseDepth / 2);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-baseWidth / 2, baseHeight, -baseDepth / 2);
-
-
-
 	glEnd();
+	glActiveTextureARB(GL_TEXTURE1_ARB);
+	glDisable(GL_TEXTURE_2D);
+	glActiveTextureARB(GL_TEXTURE0_ARB);
+	glDisable(GL_TEXTURE_2D);
+
+	glPopAttrib();
 	glPopMatrix();
-
-
 
 
 	glDisable(GL_LIGHT0);
@@ -507,81 +500,6 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	glEnd();
 	glColor3f(1.0f, 0.0f, 0.0f);
 
-	/*
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnable(GL_NORMALIZE);
-	pTextures->BeginSphereMapping(11);
-
-	glPushMatrix();
-	glTranslatef(-2.0f, 5.0f, 0.0f);
-	auxSolidSphere(2.0);
-	glPopMatrix();
-
-	pTextures->EndSphereMapping();
-	glDisable(GL_NORMALIZE);
-
-
-
-	// Desenha Esfera com CubeMapping
-	glEnable(GL_NORMALIZE);
-	pTextures->BeginCubeMapping();
-	glPushMatrix();
-	glTranslatef(2.0f, 5.0f, 0.0f);
-	//glRotatef(fAngle, 0.0f, 1.0f, 0.0f);
-	//glScalef(10.0f, 10.0f, 10.0f);
-
-	glMatrixMode(GL_TEXTURE);
-	glPushMatrix();
-	// Invert camera matrix (rotation only) and apply to 
-			// texture coordinates
-	M3DMatrix44f m, invert;
-	M3DVector3f x, vUp, z;
-
-	// Make rotation matrix
-	// Z vector is reversed
-	z[0] = -pCamera->Forward[0];
-	z[1] = -pCamera->Forward[1];
-	z[2] = -pCamera->Forward[2];
-
-	vUp[0] = pCamera->Up[0];
-	vUp[1] = pCamera->Up[1];
-	vUp[2] = pCamera->Up[2];
-
-	// X vector = Y cross Z 
-	m3dCrossProduct(x, vUp, z);
-
-	// Matrix has no translation information and is
-	// transposed.... (rows instead of columns)
-#define M(row,col)  m[col*4+row]
-	M(0, 0) = x[0];
-	M(0, 1) = x[1];
-	M(0, 2) = x[2];
-	M(0, 3) = 0.0;
-	M(1, 0) = pCamera->Up[0];
-	M(1, 1) = pCamera->Up[1];
-	M(1, 2) = pCamera->Up[2];
-	M(1, 3) = 0.0;
-	M(2, 0) = z[0];
-	M(2, 1) = z[1];
-	M(2, 2) = z[2];
-	M(2, 3) = 0.0;
-	M(3, 0) = 0.0;
-	M(3, 1) = 0.0;
-	M(3, 2) = 0.0;
-	M(3, 3) = 1.0;
-#undef M 
-
-	m3dInvertMatrix44(invert, m);
-	glMultMatrixf(invert);
-
-	auxSolidSphere(2.0);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	pTextures->EndCubeMapping();
-	glDisable(GL_NORMALIZE);
-	*/
-	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//                               DESENHA OS OBJETOS DA CENA (FIM)
