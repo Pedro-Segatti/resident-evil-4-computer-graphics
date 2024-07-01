@@ -39,6 +39,7 @@ CScene1::CScene1()
 	pTextures->CreateTextureMipMap(7, "../Scene1/Sphere.bmp");
 	pTextures->CreateTextureMipMap(8, "../Scene1/carpa.jpg");
 	pTextures->CreateTextureMipMap(9, "../Scene1/cardume.png");
+	pTextures->CreateTextureMipMap(10, "../Scene1/cerca.jpg");
 
 	LightAmbient[0] = 1.0f;		LightAmbient[1] = 1.0f;		LightAmbient[2] = 1.0f;		LightAmbient[3] = 1.0f;
 	LightDiffuse[0] = 1.0f;		LightDiffuse[1] = 0.74f;	LightDiffuse[2] = 0.0f;		LightDiffuse[3] = 1.0f;
@@ -316,6 +317,11 @@ int CScene1::DrawGLScene(void)	// Função que desenha a cena
 	DrawTree(pArvore3, 0.0f, 0.0f, -70.0f, 0.12f, 0.12f, 0.12f);
 	DrawTree(pArvore4, -80.0f, 0.0f, 10.0f, 0.16f, 0.16f, 0.16f);
 
+	DrawFenceVertexArrays(0.0f, -1.0f, -105.0f);
+	DrawFenceVertexArrays(20.0f, -1.0f, -105.0f);
+	DrawFenceVertexArrays(40.0f, -1.0f, -105.0f);
+	DrawFenceVertexArrays(60.0f, -1.0f, -105.0f);
+
 	glTranslatef(40.0f, -0.8f, -50.0f);
 	glScalef(1.3f, 1.3f, 1.3f);
 
@@ -588,6 +594,28 @@ void CScene1::DrawTree(CModel_3DS* tree, float posX, float posY, float posZ, flo
 		tree->Draw();
 		glPopMatrix();
 	}
+}
+
+void CScene1::DrawFenceVertexArrays(float x, float y, float z)
+{
+	pTextures->ApplyTexture(10);
+	glPushMatrix();
+	glTranslatef(x, y, z);
+
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glNormalPointer(GL_FLOAT, 0, &this->vfFenceNormals[0]);
+	glTexCoordPointer(2, GL_FLOAT, 0, &this->vfFenceTexCoords[0]);
+	glVertexPointer(3, GL_FLOAT, 0, &this->vfFenceVerts[0]);
+
+	glDrawArrays(GL_TRIANGLES, 0, 204);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glPopMatrix();
 }
 
 void CScene1::DrawTransparentWater()
